@@ -1,0 +1,240 @@
+if ARCH_SSDTV
+
+menu "Samsung DTV SOC Project H/W introduce"
+
+choice
+	prompt "SDPXX SoC Type"
+	default ARCH_SDP78FPGA
+
+config ARCH_SDP83
+	bool "Samsung DTV Project - SDP83(Chelsea, ARM1176JZF-S)"
+	select CPU_V6
+	select VFP
+
+endchoice
+
+
+if ARCH_SSA1FPGA
+
+choice
+	prompt "A1 FPGA Board type Type"
+	default MACH_A1FPGA
+
+config MACH_A1FPGA
+	depends on ARCH_SSA1FPGA
+	bool "Samsung A1 FPGA"
+#	select PCI
+#	select S5H2X_CS8900
+#	select S5H2X_CS8900_NO_EEPROM
+endchoice
+
+endif
+
+if ARCH_SDP75
+choice
+	prompt "SDP75 Board type Type"
+	default MACH_POLARIS
+
+config MACH_POLARIS
+	depends on ARCH_SDP75
+	bool "Samsung Polaris (SDP75 Evaluation board)"
+	select ARM_AMBA
+	select PCI
+	select SSDTV_PCI
+endchoice
+endif
+
+if ARCH_SDP78FPGA
+choice
+	prompt "SDP78FPGA Board Type"
+	default MACH_SDP78FPGA
+
+config MACH_SDP78FPGA
+	bool "Samsung SDP78 FPGA"
+	select ARM_AMBA
+endchoice
+
+config SYSTEM_CLOCK
+	hex "FPGA System Clock"
+	depends on ARCH_SDP78FPGA
+	default "0x18000000"
+endif
+
+if ARCH_SDP83
+choice
+	prompt "SDP83 Board type Type"
+	default MACH_LEONID
+
+config MACH_LEONID
+	depends on ARCH_SDP83
+	bool "Samsung Leonid 384MB,64bit"
+	select ARM_AMBA
+	select MACH_LEONID_XXX
+
+config MACH_LEONID64512
+	depends on ARCH_SDP83
+	bool "Samsung Leonid 512MB,64bit"
+	select ARM_AMBA
+	select MACH_LEONID_XXX
+
+config MACH_LEONID64256
+	depends on ARCH_SDP83
+	bool "Samsung Leonid 256MB,64bit"
+	select ARM_AMBA
+	select MACH_LEONID_XXX
+
+config MACH_LEONID48320
+	depends on ARCH_SDP83
+	bool "Samsung Leonid 320MB,48bit"
+	select ARM_AMBA
+	select MACH_LEONID_XXX
+
+config MACH_LEONID48256
+	depends on ARCH_SDP83
+	bool "Samsung Leonid 256MB,48bit"
+	select ARM_AMBA
+	select MACH_LEONID_XXX
+
+config MACH_LEONID48US
+	depends on ARCH_SDP83
+	bool "Samsung Leonid 192MB,48bit US"
+	select MACH_LEONID_XXX
+	select ARM_AMBA
+
+config MACH_LEONID48EU
+	depends on ARCH_SDP83
+	bool "Samsung Leonid 192MB,48bit EU"
+	select MACH_LEONID_XXX
+	select ARM_AMBA
+
+config MACH_LEONID32US
+	depends on ARCH_SDP83
+	bool "Samsung Leonid 128MB,32bit US"
+	select MACH_LEONID_XXX
+	select ARM_AMBA
+
+endchoice
+config SDP83_GPIO
+	bool "SDP GPIO driver glue logic for SDP83"
+	select ARCH_REQUIRE_SDP_GPIO
+endif
+
+# Samsung SDP83 Chelsea Evaluation board series
+config MACH_LEONID_XXX
+	default n
+	depends on MACH_LEONID || MACH_LEONID48EU || MACH_LEONID48US || MACH_LEONID48320 || MACH_LEONID48256
+	bool "Samsung SDP83 Chelsea Evaluation board series"
+	select PCI
+	select SSDTV_PCI
+
+# SELP.arm.3.x support A1 2007-10-22
+if MACH_POLARIS
+choice
+        prompt "Choose Linux Kernel Memory"
+        default SYS_MEM_EAST
+
+config SYS_MEM_WEST
+        depends on MACH_POLARIS
+        bool "West Base(0x60008000)"
+
+config SYS_MEM_EAST
+        depends on MACH_POLARIS
+        bool "East Base(0xD0008000)"
+endchoice
+endif
+
+# Interrupt policy
+choice
+	prompt "SSDTV Interrupt controller policy"
+	default INTC_PRIORITY
+
+config INTC_PRIORITY
+	bool "Priority interrupt policy"
+
+config INTC_NOT_NESTED	
+	bool "Don't support to be nested"
+
+config INTC_NONE
+	bool "Interrupt policy is none"
+endchoice
+
+#config CHECK_ISRTIME
+#	bool "Check to take ISR time"
+
+# Interrupt policy end
+
+# Hrtimer 
+choice
+	prompt "SSDTV Timer type"
+	default SSDTV_TIMER
+
+config SSDTV_TIMER
+	bool "ssdtv support tick timer"
+	help
+
+config SSDTV_SUPPORT_HRTIMER
+	bool "ssdtv support hrtimer"
+	depends on MACH_POLARIS || MACH_LEONID_XXX
+	select GENERIC_TIME
+	select GENERIC_CLOCKEVENTS
+	select HIGH_RES_TIMERS
+	help
+
+endchoice
+# Hrtimer end
+
+# WFI Command Not use
+config NOT_USE_WFI
+	bool "Not use WFI command"
+# WFI Command Not use End
+
+# Discontinous mem support
+config SSDTV_DISCONTIGMEM_SUPPORT
+	depends on MACH_POLARIS || MACH_LEONID_XXX
+        bool "Discontinous memory support" if !SYS_MEM_EAST && !SYS_MEM_B
+        select ARCH_DISCONTIGMEM_ENABLE
+# Discontinous mem support end
+
+# ssdtv-pci menu
+config SSDTV_PCI
+	default y
+	depends on PCI
+	bool "SSDTV PCI bus driver"
+
+# ssdtv-pci:pci-clock
+choice
+	prompt "SSDTV PCI clock type"
+	depends on SSDTV_PCI
+	default SSDTV_PCI_EXT_CLK
+
+config SSDTV_PCI_EXT_CLK
+        depends on SSDTV_PCI
+        bool "Use PCI External Clock"
+
+config SSDTV_PCI_INTERNAL_33MHZ
+        depends on SSDTV_PCI
+        bool "Use PCI Internal 33Mhz Clock"
+
+config SSDTV_PCI_INTERNAL_66MHZ
+        depends on SSDTV_PCI
+        bool "Use PCI Internal 66Mhz Clock"
+
+endchoice
+
+# Ethernet ethernet eeprom
+config SSDTV_ETH_NO_EEPROM
+        default n
+        bool "Don't Support Ethernet EEPROM"
+        help
+
+config S5H2X_CS8900
+	default n
+	bool
+
+config S5H2X_CS8900_NO_EEPROM
+	default n
+	bool
+endmenu
+
+endif
+

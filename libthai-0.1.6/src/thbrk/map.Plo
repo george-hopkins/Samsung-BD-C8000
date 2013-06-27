@@ -1,0 +1,1 @@
+map.lo map.o: map.c

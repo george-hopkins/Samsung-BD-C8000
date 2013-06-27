@@ -1,0 +1,55 @@
+#!/bin/sh
+
+#SDAL_DIR=/home/jhkim/new_Barcelona_Prj_int/SDAL/Barcelona/BSP/Bin
+SDAL_DIR=/home/wonseok_kim/cc_view/Barc_SDAL_Prj/SDAL/Barcelona/BSP/Bin
+
+## Copy Image
+echo "Copy Images into new SDAL Dir"
+sudo cp Image_1GB $SDAL_DIR/1GB/C6900/Image_Secure_No
+sudo cp Image_1GB $SDAL_DIR/1GB/C6930/Image_Secure_No
+sudo cp Image_1GB $SDAL_DIR/1GB/C8000/Image_Secure_No
+sudo cp Image_128MB       $SDAL_DIR/128MB/C8500/Image_Secure_No
+sudo cp Image_128MB_C8900 $SDAL_DIR/128MB/C8900/Image_Secure_No
+
+
+## Copy Secure Debug Image
+sudo cp Image_1GB_Secure_Debug $SDAL_DIR/1GB/C6900/Image
+sudo cp Image_1GB_Secure_Debug $SDAL_DIR/1GB/C6930/Image
+sudo cp Image_1GB_Secure_Debug $SDAL_DIR/1GB/C8000/Image
+sudo cp Image_128MB_Secure_Debug       $SDAL_DIR/128MB/C8500/Image
+sudo cp Image_128MB_C8900_Secure_Debug $SDAL_DIR/128MB/C8900/Image
+
+
+## Copy Secure Release Image
+sudo cp Image_1GB_Secure_Release $SDAL_DIR/1GB/Secure/C6900/Image
+sudo cp Image_1GB_Secure_Release $SDAL_DIR/1GB/Secure/C6930/Image
+sudo cp Image_1GB_Secure_Release $SDAL_DIR/1GB/Secure/C8000/Image
+sudo cp Image_128MB_Secure_Release       $SDAL_DIR/128MB/Secure/C8500/Image
+sudo cp Image_128MB_C8900_Secure_Release $SDAL_DIR/128MB/Secure/C8900/Image
+
+
+## Copy vmlinux
+echo "Copy vmlinux into new SDAL Dir"
+sudo cp vmlinux_1GB $SDAL_DIR/1GB/C6900/vmlinux_1GB_Secure_No
+sudo cp vmlinux_1GB $SDAL_DIR/1GB/C6930/vmlinux_1GB_Secure_No
+sudo cp vmlinux_1GB $SDAL_DIR/1GB/C8000/vmlinux_1GB_Secure_No
+sudo cp vmlinux_128MB        $SDAL_DIR/128MB/C8500/vmlinux_128MB_Secure_No
+sudo cp vmlinux_128MB_C8900  $SDAL_DIR/128MB/C8900/vmlinux_128MB_Secure_No
+
+
+## Copy Secure Debug vmlinux
+sudo cp vmlinux_1GB_Secure_Debug $SDAL_DIR/1GB/C6900/vmlinux_1GB                    
+sudo cp vmlinux_1GB_Secure_Debug $SDAL_DIR/1GB/C6930/vmlinux_1GB                 
+sudo cp vmlinux_1GB_Secure_Debug $SDAL_DIR/1GB/C8000/vmlinux_1GB                  
+sudo cp vmlinux_128MB_Secure_Debug        $SDAL_DIR/128MB/C8500/vmlinux_128MB
+sudo cp vmlinux_128MB_C8900_Secure_Debug  $SDAL_DIR/128MB/C8900/vmlinux_128MB
+
+
+## Copy Secure Release vmlinux
+sudo cp vmlinux_1GB_Secure_Release $SDAL_DIR/1GB/Secure/C6900/vmlinux_1GB
+sudo cp vmlinux_1GB_Secure_Release $SDAL_DIR/1GB/Secure/C6930/vmlinux_1GB
+sudo cp vmlinux_1GB_Secure_Release $SDAL_DIR/1GB/Secure/C8000/vmlinux_1GB
+sudo cp vmlinux_128MB_Secure_Release       $SDAL_DIR/128MB/Secure/C8500/vmlinux_128MB
+sudo cp vmlinux_128MB_C8900_Secure_Release $SDAL_DIR/128MB/Secure/C8900/vmlinux_128MB
+
+

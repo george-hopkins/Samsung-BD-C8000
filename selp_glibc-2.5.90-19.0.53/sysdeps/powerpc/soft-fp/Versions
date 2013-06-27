@@ -1,0 +1,40 @@
+libc {
+  GLIBC_2.2 {
+    _q_add; _q_cmp; _q_cmpe; _q_div; _q_dtoq; _q_feq; _q_fge; _q_fgt;
+    _q_fle; _q_flt; _q_fne; _q_itoq; _q_mul; _q_neg; _q_qtod; _q_qtoi;
+    _q_qtos; _q_qtou; _q_sqrt; _q_stoq; _q_sub;
+    _q_utoq;
+    _q_lltoq; _q_qtoll; _q_qtoull; _q_ulltoq;
+  }
+  GLIBC_2.0 {
+    __adddf3;
+    __addsf3;
+    __divdf3;
+    __divsf3;
+    __eqdf2;
+    __eqsf2;
+    __extendsfdf2;
+    __fixdfsi;
+    __fixsfsi;
+    __fixunsdfsi;
+    __floatsidf;
+    __floatsisf;
+    __gedf2;
+    __gesf2;
+    __gtdf2;
+    __gtsf2;
+    __ledf2;
+    __lesf2;
+    __ltdf2;
+    __ltsf2;
+    __muldf3;
+    __mulsf3;
+    __nedf2;
+    __negdf2;
+    __negsf2;
+    __nesf2;
+    __subdf3;
+    __subsf3;
+    __truncdfsf2;
+  }
+}

@@ -1,0 +1,250 @@
+menu Samsung
+
+## SELP Menu Start: config file  for SELP.4.3.x Cortex-A8 Features ##
+menu "Samsung SELP Option"
+comment "SELP.4.3.x"
+
+config SHOW_FAULT_TRACE_INFO
+       bool "Show Trace Info on User Page Fault"
+       default y
+       help
+        Show trace information when occurred "Segmentation Fault" or "Bus Error"
+        Prints registers, call stack, maps, user stack, etc.
+
+config SHOW_THREAD_GROUP_STACK 
+       bool "Show Thread Group's Stack on User Page Fault" 
+       default n
+       depends on SHOW_FAULT_TRACE_INFO
+       help 
+        Show thread group's user stack with basic fault trace information.
+        It may be useful when one thread occurred fault,
+        but another thread is a criminal.
+        Be careful when using this option,
+        because dumping all thread's stack can generate very long message.
+
+config SEPARATE_PRINTK_FROM_USER
+       bool "It separate messgaes(printf, printk) between user and kernel."
+       default n
+       help
+        Show trace information when occurred "Segmentation Fault" or "Bus Error"
+        Prints registers, call stack, maps, etc.
+
+config RSS_INFO
+       bool "Support to print rss information of process memory"
+       default y
+       help
+        Enable to print information of rss
+
+config SERIAL_INPUT_MANIPULATION
+       bool "Manipulate Serial INPUT in N_TTY"
+       help
+         decide whether serial input by user is enabled or not
+
+config SERIAL_INPUT_ENABLE_STRING
+       string "Serial Input Enable String(Max 10 character)"
+       default "debug"
+       depends on SERIAL_INPUT_MANIPULATION=y
+       help
+        default string that enable serial input by user
+
+config SERIAL_INPUT_DISABLE_STRING
+       string "Serial Input Disable String(Max 10 character)"
+       default "~~bye"
+       depends on SERIAL_INPUT_MANIPULATION=y
+       help
+        default string that disable serial input by user
+
+config SERIAL_INPUT_DEFAULT_SETUP_ENABLE
+       bool "Serial Input enable Setup at boot"
+       default n
+       depends on SERIAL_INPUT_MANIPULATION=y
+
+config SERIAL_INPUT_MANIPULATION_PORTNUM
+       int "Serial Input Manipulation Port Line Number"
+       default 0
+       depends on SERIAL_INPUT_MANIPULATION=y
+
+config SERIAL_INPUT_ENABLE_ONLY_NUMBER
+       bool "Input enabled only 0~9, space, enter and backspace"
+	   default n
+	   depends on SERIAL_INPUT_MANIPULATION=y
+
+config KDEBUGD
+	    bool "KDEBUGD - core"
+	    default n
+        depends on SHOW_FAULT_TRACE_INFO
+        depends on SERIAL_INPUT_MANIPULATION 
+    	help
+          kdebugd - kernel debugging helper 
+          kdebugd is a good solution for kernel hacker who want to know 
+          kernel information easily.
+
+config KDEBUGD_STRING
+	    string "KDEBUGD_STRING"
+        default "SP_DEBUG" 
+        depends on KDEBUGD 
+
+config KDEBUGD_MISC
+	    bool "KDEBUGD - miscellaneous functions"
+	    default y
+        depends on KDEBUGD
+    	help
+          kdebugd - kernel debugging helper 
+          1. A list of tasks and their relation information
+          2. A list of tasks and their priority information
+          3. A list of tasks and their inforamtion + backtrace(kernel)
+          4. Turn On/Off O(1) Scheduler prints
+          5. Dump task register with pid
+          6. Dump task maps with pid
+          7. Dump user stack with pid
+          8. Memory Integrity Checker
+          9. Trace thread execution(look at PC)
+          10. Schedule history logger
+
+config KDEBUGD_TRACE
+	    bool "KDEBUGD - backtrace"
+	    default y
+        depends on KDEBUGD_MISC
+    	help
+          kdebugd - backtrace
+          1. Dump backtrace(User)
+
+config KDEBUGD_COUNTER_MONITOR
+           bool "KDEBUGD - counter monitor"
+           default y
+        depends on KDEBUGD
+       help
+          kdebugd - counter monitor
+          1. CPU Usage
+          2. CPU Usage for each thread
+          3. Memory Usage
+          4. Disk Usage
+          5. Network Usage 
+
+config KDEBUGD_CPUUSAGE_BUFFER_SIZE
+       int "CPU usage buffer size"
+       default 120
+       depends on KDEBUGD_COUNTER_MONITOR
+
+config KDEBUGD_TOPTHREAD_BUFFER_SIZE
+       int "Topthread buffer size"
+       default 120
+       depends on KDEBUGD_COUNTER_MONITOR
+ 
+config KDEBUGD_MAX_TOPTHREAD
+       int "Max count of top thread cpu usage"
+       default 5
+       depends on KDEBUGD_COUNTER_MONITOR
+
+config KDEBUGD_MEMUSAGE_BUFFER_SIZE
+       int "Memory usage buffer size"
+       default 120
+       depends on KDEBUGD_COUNTER_MONITOR
+ 
+config KDEBUGD_DISKUSAGE_BUFFER_SIZE
+       int "Disk usage buffer size"
+       default 120
+       depends on KDEBUGD_COUNTER_MONITOR
+ 
+config KDEBUGD_NETUSAGE_BUFFER_SIZE
+       int "Network usage buffer size"
+       default 120
+       depends on KDEBUGD_COUNTER_MONITOR
+
+config ADVANCE_OPROFILE
+        bool "Advance OProfile"
+        default y
+       depends on KDEBUGD
+       depends on OPROFILE
+
+config DTVLOGD
+      bool "DTVLOGD serial message logging system"
+      default y
+      help
+        Saving all serial message into memory buffer.
+
+#config DTVLOGD_EMERGENCY_LOG
+#      bool "DTVLOGD - Emergency Log"
+#      default n
+#      depends on DTVLOGD
+#      help
+#       Save emergency serial message into flash.
+
+config DTVLOGD_USB_LOG
+      bool "DTVLOGD - USB Log"
+      default n
+      depends on DTVLOGD
+      help
+       Save all serial message into usb.
+
+config SHOW_LOCK_WAITING_LIST
+      bool "It display futex, sem waiting list."
+      depends on SHOW_FAULT_TRACE_INFO && SERIAL_INPUT_MANIPULATION
+      default n
+      help
+       It display futex, sem waiting list.
+
+config SHOW_LOCK_WAITING_LIST_COMMAND
+      string "Command for showing waiting futex,semop list"
+      default showlist
+      depends on SHOW_FAULT_TRACE_INFO && SERIAL_INPUT_MANIPULATION && SHOW_LOCK_WAITING_LIST
+
+config CHECK_THREAD_NAME
+    bool "Checking whether thread name is changed or not"
+    default n
+    help
+      If check this option, print PID, TID of thread whose name is not changed
+      depends on SHOW_FAULT_TRACE_INFO
+
+config THREAD_NAME_FOR_NAME_CHECKER
+    string "Thread name for Name cheker"
+    default "exeDSP"
+    depends on CHECK_THREAD_NAME
+
+config CHECK_THREAD_NAME_CONTEXT_CNT
+    int "Threshold value for thread naming check"
+    default 3
+    depends on CHECK_THREAD_NAME
+
+config BOOTPROFILE
+	bool "Boot Profile"
+	default n
+	help
+	  Tool for performance analysis and visualization of boot process.
+
+
+config RAMZSWAP                                                                                                                           
+       bool "RAMZSWAP support"                                                                                                            
+       default n                                                                                                                          
+       depends on SWAP && LZO_COMPRESS && LZO_DECOMPRESS                                                                                  
+       help                                                                                                                               
+            RAM based block device which acts as swap disk.                                                                               
+
+config RAMZSWAP_SIZE
+       int "Ramzswap swap size"
+       default 204800
+       depends on RAMZSWAP
+       help 
+           Swap size
+
+
+
+
+config BD_CACHE_ENABLED
+	bool "BD Cache Enable"
+	default y
+	help
+	  Blu-ray cache enable/disable
+
+config SSIF_EXT_CACHE
+       bool "BD UDF Extents Cache (for 3D BD)"
+       default y
+       help
+         The 3D Blu-ray has many extents. So it make slow read problem when play it.
+         This problem also occur even we play 3D Blu-ray with 2D mode.
+         So remember last accessed inode to enhance read performance of 3D Blu-ray.
+
+source "mm/Kconfig.SELP.FASTBOOT"
+
+endmenu # end of "Samsung SELP Option" menu
+endmenu # end of "Samsung" menu

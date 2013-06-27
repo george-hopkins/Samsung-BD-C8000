@@ -1,0 +1,75 @@
+if ARCH_SDP
+
+config SDP_GMAC
+	depends on ARCH_SDP92 || ARCH_SDP93
+	tristate "SDP GMAC Driver"
+	select NETDEVICES
+	select NET_ETHERNET
+	select MII
+
+choice 
+	prompt "SDP GMAC set mac address"
+	default MAC_SET_BY_USER
+
+config MAC_GET_I2C
+	depends on SDP_I2C && SDP_GMAC
+	bool	"SDP GMAC get mac address from i2c device"
+
+config MAC_SET_BY_USER
+	depends on SDP_GMAC
+	bool 	"SDP GMAC set mac address by user"
+
+config MAC_GET_FLASH
+	depends on SDP_GMAC
+	bool	"SDP GAMC get mac address from falsh device"
+
+
+endchoice
+
+
+if MAC_GET_I2C
+config MAC_I2C_PORT
+	depends on MAC_GET_I2C
+	int 	"SDP GMAC i2c device port number"
+	default 1
+
+config MAC_I2C_SLV_ADDR
+	depends on MAC_GET_I2C
+	hex	"SDP GMAC i2c device slave address"
+	default 0xA0
+
+config MAC_I2C_SUBADDR_NR
+	depends on MAC_GET_I2C
+	int	"SDP GMAC i2c number of sub addresses"
+	default 2
+
+config MAC_I2C_SUBADDR
+	depends on MAC_GET_I2C
+	hex	"SDP GMAC i2c sub address"
+	default 0x10
+endif # MAC_GET_I2C
+
+if MAC_SET_BY_USER
+config MAC_FRONT_4BYTE
+	depends on MAC_SET_BY_USER
+	hex 	"SDP GMAC Mac address front 4 byte"
+	default 0x11223344
+
+config MAC_END_2BYTE
+	depends on MAC_SET_BY_USER
+	hex 	"SDP GMAC Mac address end 2 byte"
+	default 0x5566
+
+endif # MAC_SET_BY_USER
+
+if MAC_GET_FLASH
+config MAC_FLASH_PARTITION
+	depends on MAC_GET_FLASH
+	string	"SDP GMAC Flash Partition device name"
+	default "/dev/tbml12"
+
+endif # MAC_GET_FLASH
+
+
+
+endif

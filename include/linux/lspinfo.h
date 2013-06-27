@@ -1,0 +1,7 @@
+#define LSP_SELP_VERSION  "v2.6.24_SELP_4.3.x_GA"
+#define LSP_BUILD_DATE    "20090418"
+#define LSP_REVISION      "P20"
+#define LSP_NAME          "Valencia/Barcelona"
+#define LSP_BOARD_NAME    "Samsung ARMv7 Cortex-A8 Processor"
+#define LSP_SELP_ARCH     "arm_v7_vfp_le"
+#define SELP_PATCHES      "20"

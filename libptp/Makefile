@@ -1,0 +1,98 @@
+##############################################
+#Makefile for PTP Driver Lib
+##############################################
+.SUFFIXES = .c .o 
+
+SHARED_LIB = y
+COMPILE_OPT = y
+#SHARED_LIB = n  #If compile PTP test
+
+#OPENSRC_DEF_CHIP=$(PTP_DEF_CHIP)
+OPENSRC_DEF_CHIP=VALENCIA # valencia & barcelona have same config
+ifeq ($(origin OPENSRC_DEF_CHIP), undefined)
+OPENSRC_DEF_CHIP = INTEL
+endif
+##########################################################
+##########################################################
+CC = $(CROSS_COMPILE)g++
+CXX = $(CROSS_COMPILE)g++
+AR = $(CROSS_COMPILE)ar
+RANLIB = $(CROSS_COMPILE)ranlib
+LD = $(CROSS_COMPILE)ld
+INC =  ./Inc
+##########################################################
+# Setting Platform Type
+ifeq ($(OPENSRC_DEF_CHIP), VALENCIA)
+COMPILE_OPT = n
+endif
+ifeq ($(OPENSRC_DEF_CHIP), X4)
+COMPILE_OPT = n
+ 	ADD_COMPILE_OPT += -EL -msoft-float -march=mips32r2
+ 	ADD_LINK_OPT += -EL -msoft-float -march=mips32r2
+endif
+ifeq ($(OPENSRC_DEF_CHIP), Trident)
+COMPILE_OPT = n
+PTP_DEFINES += ENDIAN_PATCH_BY_SISC
+endif
+ifeq ($(OPENSRC_DEF_CHIP), INTEL)
+COMPILE_OPT = y
+endif
+##########################################################
+##########################################################
+
+DEFINES += $(addprefix -D, $(PTP_DEFINES)) 
+
+ifeq ($(COMPILE_OPT), n)
+CFLAGS = -fPIC -Wall -Wextra -Wcast-align -Wno-unused-parameter -Wshadow \
+		  -Wwrite-strings -Wcast-qual \
+		  -fno-strict-aliasing -fsigned-char -O2\
+		  -ffunction-sections -fdata-sections\
+		  -Werror $(ADD_COMPILE_OPT)\
+		  -I $(INC) $(DEFINES)
+CPPFLAGS = -fPIC -Wall -Wextra -Wcast-align -Wno-unused-parameter -Wshadow \
+		  -Wwrite-strings -Wcast-qual \
+		  -fno-strict-aliasing -fsigned-char -O2\
+		  -ffunction-sections -fdata-sections\
+		  -Werror $(ADD_COMPILE_OPT)\
+		  -I $(INC) $(DEFINES) -D_LINUX
+endif
+ifeq ($(COMPILE_OPT), y)
+CFLAGS = -c -O2 -Wall -Wno-write-strings -fPIC -I $(INC)
+CPPFLAGS = -c -O2 -Wall -fPIC -I $(INC) -D_LINUX
+endif
+
+ifeq ($(OPENSRC_DEF_CHIP), Trident)
+CFLAGS += -march=mips1 -mtune=mips1
+endif
+
+##########################################################
+##########################################################
+OBJS = PTPDeviceListUpdate.o  ptp.o ptpapi.o
+SRCS = PTPDeviceListUpdate.cpp  ptp.c ptpapi.c
+
+ifeq ($(SHARED_LIB), y)
+TARGET = libptp.so
+$(TARGET) : $(OBJS)
+	$(AR) rcv $@ $(OBJS)
+	$(RANLIB) $@
+ifeq ($(OPENSRC_DEF_CHIP), X4)
+	$(CC) -shared -Wl $(ADD_LINK_OPT),-soname,$@ -o $@ $(OBJS)
+else
+	$(CC) -shared -Wl,-soname,$@ -o $@ $(OBJS)
+endif
+#	$(LD) -o $@	$(OBJS)
+else
+TARGET = libptp.a
+$(TARGET) : $(OBJS)
+	$(AR) rcv $@ $(OBJS)
+	$(RANLIB) $@
+endif
+
+##########################################################
+##########################################################
+
+all : 	$(TARGET)
+dep :
+	gccmakedep $(INC) $(SRCS)
+clean :
+	rm -rf $(OBJS) $(TARGET) core

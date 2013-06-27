@@ -1,0 +1,151 @@
+if ARCH_SDP
+
+menu "Samsung SDPXX SoC H/W introduce"
+
+# Interrupt controller option
+choice
+	prompt "SDP Interrupt controller policy"
+	default INTC_PRIORITY
+
+config INTC_PRIORITY
+	bool "Priority interrupt policy"
+
+config INTC_NOT_NESTED	
+	bool "Don't support to be nested"
+
+config INTC_NONE
+	bool "Interrupt policy is none"
+
+endchoice 
+
+config POLL_INTR_PEND
+	bool "Polling interrupt pending reg instead of idle"
+	default y
+
+
+#config CHECK_ISRTIME
+#	bool "Check to take ISR time"
+# Interrupt controller option
+
+
+# UART 
+config SERIAL_SDP
+	tristate "Samsung SDPXX SoC serial port support"
+	depends on ARCH_SDP
+	select SERIAL_CORE
+
+config SERIAL_SDP_CONSOLE
+	bool "Support for console on Samsung SDPXX SoC"
+	depends on SERIAL_SDP=y
+	select SERIAL_CORE_CONSOLE
+# UART end
+
+
+
+# I2C
+config SDP_I2C
+        depends on ARCH_SDP83 || ARCH_SDP92 || ARCH_SDP93
+        bool "Samsung SDP SoC I2c driver without i2c layer in kernel"
+# I2C end
+
+
+# GPIO
+config SDP92_GPIO
+	default y
+	bool "SDP GPIO driver glue logic for SDP92"
+	depends on SDP92
+	select SDP_GPIO
+
+config SDP83_GPIO
+	default y
+	bool "SDP GPIO driver glue logic for SDP83"
+	depends on SDP83
+	select SDP_GPIO
+
+config SDP_GPIO
+	default y
+        bool "Samsung SDP SoC standalone GPIO driver"
+# GPIO end
+
+
+# Timer
+choice
+	prompt "SDP Timer type"
+	default SDP_TIMER
+
+config SDP_TIMER
+	bool "Use Basic tick timer"
+
+config SDP_SUPPORT_HRTIMER
+	bool "Use high-resolution timer"
+	select GENERIC_TIME
+	select GENERIC_CLOCKEVENTS
+	select HIGH_RES_TIMERS
+endchoice
+# Timer end
+
+# WFI Command Not use for ARMv6 based SoC
+config NOT_USE_WFI
+	bool "Not use WFI command"
+	depends on ARCH_SDP83
+# WFI Command Not use for ARMv6 based SoC end
+
+
+# PCI
+# sdp-pci menu
+config SDP_PCI
+	default y
+	depends on PCI && ARCH_SDP83
+	bool "SDP PCI bus driver"
+
+config SDP_PCIE
+	default y
+	depends on PCI && (ARCH_SDP92 || ARCH_SDP93) 
+	bool "SDP PCI Express RC driver"
+
+# sdp-pci:pci-clock
+choice
+	prompt "SDP PCI clock type"
+	depends on SDP_PCI
+	default SDP_PCI_EXT_CLK
+
+config SDP_PCI_EXT_CLK
+        depends on SDP_PCI
+        bool "Use PCI External Clock"
+
+config SDP_PCI_INTERNAL_33MHZ
+        depends on SDP_PCI
+        bool "Use PCI Internal 33Mhz Clock"
+
+config SDP_PCI_INTERNAL_66MHZ
+        depends on SDP_PCI
+        bool "Use PCI Internal 66Mhz Clock"
+
+endchoice
+# PCI end
+
+# Ethernet 
+source "arch/arm/plat-sdp/sdpGmac/Kconfig"
+
+
+# Ethernet ethernet eeprom
+config SDP_ETH_NO_EEPROM
+        default n
+	depends on MACH_LEONID_XXX
+        bool "Don't Support Ethernet EEPROM"
+        help
+
+config S5H2X_CS8900
+	default n
+	depends on MACH_LEONID_XXX
+	bool
+
+config S5H2X_CS8900_NO_EEPROM
+	default n
+	depends on MACH_LEONID_XXX
+	bool
+
+endmenu
+
+endif
+

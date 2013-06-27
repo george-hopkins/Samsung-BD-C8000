@@ -1,0 +1,126 @@
+
+## for CHELSEA
+CROSS_COMPILE = arm_v7_vfp_le-
+
+CC	= $(CROSS_COMPILE)gcc
+CXX	= $(CROSS_COMPILE)g++
+LD	= $(CROSS_COMPILE)ld
+AR	= $(CROSS_COMPILE)ar
+OBJCOPY	= $(CROSS_COMPILE)objcopy
+STRIP	= $(CROSS_COMPILE)strip
+RANLIB	= $(CROSS_COMPILE)ranlib
+
+
+SRC_DIR	= $(OPENSOURCE_DIR)/OP_Product/Codec/smpeg/smpeg-0.4.5
+OBJ_DIR	= $(SRC_DIR)
+LIB_DIR	= $(SRC_DIR)/Lib/VALENCIA
+
+
+INC =  -I$(OPENSOURCE_DIR)/OP_Product/Engine/SDL/SDL-1.2.11/include	\
+	-I$(SRC_DIR)				\
+	-I$(SRC_DIR)/include 			\
+	-I$(SRC_DIR)/video			\
+	-I$(SRC_DIR)/include/smpeg		\
+	
+
+
+EXTRA_CFLAGS = -D_GNU_SOURCE=1 -D_REENTRANT -DTHREADED_AUDIO -DNDEBUG -I.. -DNOCONTROLS -exceptions -Wall -fPIC
+EXTRA_LDFLAGS =  -lm -ldl
+
+DEFS = -fPIC 
+
+## for debug 
+#CFLAGS = -c -g $(DEFS) $(INC) $(EXTRA_CFLAGS)
+#CXXFLAGS = -c -g -fno-rtti $(DEFS) $(INC) $(EXTRA_CFLAGS)
+
+## for release 
+CFLAGS = -c -O2 $(DEFS) $(INC) $(EXTRA_CFLAGS)
+CXXFLAGS = -c -O2 -fno-rtti $(DEFS) $(INC) $(EXTRA_CFLAGS)
+
+
+OBJS = 							\
+		$(OBJ_DIR)/MPEG.o			\
+		$(OBJ_DIR)/MPEGring.o			\
+		$(OBJ_DIR)/MPEGlist.o			\
+		$(OBJ_DIR)/MPEGstream.o			\
+		$(OBJ_DIR)/MPEGsystem.o			\
+		$(OBJ_DIR)/MPEGfilter.o			\
+		$(OBJ_DIR)/smpeg.o			\
+		$(OBJ_DIR)/audio/bitwindow.o		\
+		$(OBJ_DIR)/audio/filter.o		\
+		$(OBJ_DIR)/audio/filter_2.o		\
+		$(OBJ_DIR)/audio/huffmantable.o		\
+		$(OBJ_DIR)/audio/MPEGaudio.o		\
+		$(OBJ_DIR)/audio/mpeglayer1.o		\
+		$(OBJ_DIR)/audio/mpeglayer2.o		\
+		$(OBJ_DIR)/audio/mpeglayer3.o		\
+		$(OBJ_DIR)/audio/mpegtable.o		\
+		$(OBJ_DIR)/audio/mpegtoraw.o		\
+		$(OBJ_DIR)/video/decoders.o		\
+		$(OBJ_DIR)/video/floatdct.o		\
+		$(OBJ_DIR)/video/gdith.o		\
+		$(OBJ_DIR)/video/jrevdct.o		\
+		$(OBJ_DIR)/video/motionvector.o		\
+		$(OBJ_DIR)/video/MPEGvideo.o		\
+		$(OBJ_DIR)/video/parseblock.o		\
+		$(OBJ_DIR)/video/readfile.o		\
+		$(OBJ_DIR)/video/util.o			\
+		$(OBJ_DIR)/video/vhar128.o		\
+		$(OBJ_DIR)/video/video.o		\
+
+SRCS =							\
+		$(SRC_DIR)/MPEG.cpp			\
+		$(SRC_DIR)/MPEGring.cpp			\
+		$(SRC_DIR)/MPEGlist.cpp			\
+		$(SRC_DIR)/MPEGstream.cpp		\
+		$(SRC_DIR)/MPEGsystem.cpp		\
+		$(SRC_DIR)/MPEGfilter.c			\
+		$(SRC_DIR)/smpeg.cpp			\
+		$(SRC_DIR)/audio/bitwindow.cpp		\
+		$(SRC_DIR)/audio/filter.cpp		\
+		$(SRC_DIR)/audio/filter_2.cpp		\
+		$(SRC_DIR)/audio/huffmanta 		\
+		$(SRC_DIR)/audio/MPEGaudio.cpp		\
+		$(SRC_DIR)/audio/mpeglayer1.cpp		\
+		$(SRC_DIR)/audio/mpeglayer2.cpp		\
+		$(SRC_DIR)/audio/mpeglayer3.cpp		\
+		$(SRC_DIR)/audio/mpegtable.cpp		\
+		$(SRC_DIR)/audio/mpegtoraw.cpp		\
+		$(SRC_DIR)/video/decoders.cpp		\
+		$(SRC_DIR)/video/floatdct.cpp		\
+		$(SRC_DIR)/video/gdith.cpp		\
+		$(SRC_DIR)/video/jrevdct.cpp		\
+		$(SRC_DIR)/video/motionvector.cpp	\
+		$(SRC_DIR)/video/MPEGvideo.cpp		\
+		$(SRC_DIR)/video/parseblock.cpp		\
+		$(SRC_DIR)/video/readfile.cpp		\
+		$(SRC_DIR)/video/util.cpp		\
+		$(SRC_DIR)/video/vhar128.cpp		\
+		$(SRC_DIR)/video/video.cpp		\
+
+		
+		
+TARGET = libsmpeg.so
+
+DEFS =  -DPACKAGE=\"smpeg\" -DVERSION=\"0.4.5\"  -I.
+
+$(TARGET) : $(OBJS)
+	$(CC) $(DEFS) -fPIC -shared -Wl,-soname,$@ -o $@ $(OBJS) $(EXTRA_CFLAGS) $(EXTRA_LDFLAGS)
+	chmod 777 $(TARGET) 
+	mv -f $(TARGET) $(LIB_DIR)/
+
+
+all :	$(TARGET)
+
+dep :
+	gccmakedep $(INC) $(SRCS)
+
+clean :
+	rm -rf $(OBJS) $(TARGET)
+	rm -rf $(LIB_DIR)/*
+
+
+
+
+.SUFFIXES = .cpp .c .o 
+

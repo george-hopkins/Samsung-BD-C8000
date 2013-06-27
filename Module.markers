@@ -1,0 +1,74 @@
+core_marker_format	vmlinux	name %s format %s
+fs_buffer_wait_end	vmlinux	bh %p
+fs_buffer_wait_start	vmlinux	bh %p
+fs_close	vmlinux	fd %u
+fs_exec	vmlinux	filename %s
+fs_ioctl	vmlinux	fd %u cmd %u arg %lu
+fs_llseek	vmlinux	fd %u offset %llu origin %u
+fs_lseek	vmlinux	fd %u offset %ld origin %u
+fs_open	vmlinux	fd %d filename %s
+fs_pollfd	vmlinux	fd %d
+fs_pread64	vmlinux	fd %u count %zu pos %llu
+fs_pwrite64	vmlinux	fd %u count %zu pos %llu
+fs_read	vmlinux	fd %u count %zu
+fs_readv	vmlinux	fd %lu vlen %lu
+fs_select	vmlinux	fd %d timeout #8d%lld
+fs_write	vmlinux	fd %u count %zu
+fs_writev	vmlinux	fd %lu vlen %lu
+input_event	vmlinux	type %u code %u value %d
+internal_kernel_sched_schedule	vmlinux	prev %p next %p
+ipc_msg_create	vmlinux	id %ld flags %d
+ipc_sem_create	vmlinux	id %ld flags %d
+ipc_shm_create	vmlinux	id %ld flags %d
+kernel_arch_kthread_create	vmlinux	pid %ld fn %p
+kernel_arch_syscall_entry	vmlinux	syscall_id %d ip #p%ld
+kernel_arch_syscall_exit	vmlinux	 
+kernel_arch_trap_entry	vmlinux	trap_id %ld ip #p%ld
+kernel_arch_trap_exit	vmlinux	 
+kernel_irq_entry	vmlinux	irq_id %u kernel_mode %u
+kernel_irq_exit	vmlinux	 
+kernel_kthread_stop	vmlinux	pid %d
+kernel_kthread_stop_ret	vmlinux	ret %d
+kernel_module_free	vmlinux	name %s
+kernel_module_load	vmlinux	name %s
+kernel_printk	vmlinux	ip %p
+kernel_process_exit	vmlinux	pid %d
+kernel_process_fork	vmlinux	parent_pid %d child_pid %d child_tgid %d
+kernel_process_free	vmlinux	pid %d
+kernel_process_wait	vmlinux	pid %d
+kernel_sched_try_wakeup	vmlinux	pid %d state %ld
+kernel_sched_wakeup_new_task	vmlinux	pid %d state %ld
+kernel_send_signal	vmlinux	pid %d signal %d
+kernel_softirq_entry	vmlinux	softirq_id %lu
+kernel_softirq_exit	vmlinux	softirq_id %lu
+kernel_softirq_raise	vmlinux	softirq_id %u
+kernel_tasklet_high_entry	vmlinux	func %p data %lu
+kernel_tasklet_high_exit	vmlinux	func %p data %lu
+kernel_tasklet_low_entry	vmlinux	func %p data %lu
+kernel_tasklet_low_exit	vmlinux	func %p data %lu
+kernel_timer_itimer_expired	vmlinux	pid %d
+kernel_timer_itimer_set	vmlinux	which %d interval_sec %ld interval_usec %ld value_sec %ld value_usec %ld
+kernel_timer_set	vmlinux	expires %lu function %p data %lu
+kernel_timer_timeout	vmlinux	pid %d
+kernel_timer_update_time	vmlinux	jiffies #8u%llu xtime_sec %ld xtime_nsec %ld walltomonotonic_sec %ld walltomonotonic_nsec %ld
+kernel_vprintk	vmlinux	loglevel %c string %s ip %p
+list_module	vmlinux	name %s state %d refcount %lu
+mm_filemap_wait_end	vmlinux	pfn %lu bit_nr %d
+mm_filemap_wait_start	vmlinux	pfn %lu bit_nr %d
+mm_handle_fault_entry	vmlinux	address %lu ip #p%ld write_access %d
+mm_handle_fault_exit	vmlinux	 
+mm_page_alloc	vmlinux	order %u pfn %lu
+mm_page_free	vmlinux	order %u pfn %lu
+mm_swap_file_close	vmlinux	filp %p
+mm_swap_file_open	vmlinux	filp %p filename %s
+mm_swap_in	vmlinux	pfn %lu filp %p offset %lu
+mm_swap_out	vmlinux	pfn %lu filp %p offset %lu
+net_del_ifa_ipv4	vmlinux	label %s
+net_dev_receive	vmlinux	skb %p protocol #2u%hu
+net_dev_xmit	vmlinux	skb %p protocol #2u%hu
+net_insert_ifa_ipv4	vmlinux	label %s address #4u%lu
+net_socket_create	vmlinux	sock %p family %d type %d protocol %d fd %d
+net_socket_recvmsg	vmlinux	sock %p family %d type %d protocol %d size %zu
+net_socket_sendmsg	vmlinux	sock %p family %d type %d protocol %d size %zu
+statedump_softirq_vec	vmlinux	id %d address %p symbol %s
+statedump_swap_files	vmlinux	filp %p vfsmount %p dname %s

@@ -1,0 +1,35 @@
+#
+#   Makefile for eXtended Sector Remapper (FSR) driver on kernel 2.6
+#
+#   Copyright(C) 2004-2006, Samsung Electronics, Co., Ltd.
+#
+
+# FSR base module
+obj-$(CONFIG_TINY_FSR)			+= tfsr.o
+
+# Should keep the build sequence. (fsr_base -> bml_block)
+tfsr-objs	:= tfsr_base.o tfsr_block.o tfsr_blkdev.o
+
+# This objects came from FSR, It will be never modified.
+tfsr-objs	+= Core/BML/FSR_BML_ROInterface.o 
+tfsr-objs	+= Core/BML/FSR_BML_BIFCommon.o 
+
+tfsr-objs	+= Core/BML/FSR_BML_BBMCommon.o Core/BML/FSR_BML_BBMMount.o 
+
+tfsr-objs	+= LLD/FlexOND/FSR_LLD_FlexOND.o 
+tfsr-objs       += LLD/OND/FSR_LLD_SWEcc.o LLD/OND/FSR_LLD_OneNAND.o
+tfsr-objs       += LLD/OND/FSR_LLD_4K_OneNAND.o
+tfsr-objs	+= OAM/Linux/FSR_OAM_Linux.o
+
+# Please add your platform here
+#ifeq ($(CONFIG_MACH_CORONA_XXX),y)
+tfsr-objs	+= Platform/corona/pam_corona.o
+tfsr-objs	+= Platform/corona/memcpy_corona.o
+#endif #CONFIG_MACH_CORONA_XXX
+#ifeq ($(CONFIG_MACH_LEONID_XXX),y)
+#tfsr-objs	+= Platform/leonid/pam_leonid.o
+#tfsr-objs	+= Platform/leonid/memcpy_leonid.o
+#endif #CONFIG_MACH_LEONID_XXX
+
+tfsr-objs	+= Misc/FSR_Version.o Misc/FSR_DBG_Zone.o 
+

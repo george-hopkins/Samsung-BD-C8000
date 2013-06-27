@@ -1,0 +1,173 @@
+if ARCH_SDP
+
+menu "SDPXX SoC Machine type"
+
+choice
+	prompt "DTV/BD SoC Type"
+	default ARCH_SDP92
+
+config ARCH_SDP92
+	bool "Samsung DTV Project - SDP92(Valencia, Cortex-A8)"
+	select CPU_V7
+	select VFP
+
+config ARCH_SDP93
+	bool "Samsung BD Project - SDP93(Barcelona, Cortex-A8)"
+	select CPU_V7
+	select VFP
+
+config ARCH_SDP83
+	bool "Samsung DTV Project - SDP83(Chelsea, ARM1176JZF-S)"
+	select CPU_V6
+	select VFP
+endchoice
+
+if ARCH_SDP92
+
+# board type
+choice
+	prompt "SDP92 Board type"
+	default MACH_AQUILA
+
+config MACH_AQUILA
+	depends on ARCH_SDP92
+	bool "Samsung Aquila - Valencia evaluation board."
+endchoice
+
+endif
+
+
+if ARCH_SDP93
+
+# board type
+choice
+	prompt "SDP93 Board type"
+	default MACH_CORONA
+
+config MACH_CORONA
+	depends on ARCH_SDP93
+	bool "Samsung Corona - Barcelona evaluation board."
+
+endchoice
+
+endif
+
+
+
+if ARCH_SDP83
+choice
+	prompt "SDP83 Board type Type"
+	default MACH_LEONID
+
+config MACH_LEONID
+	depends on ARCH_SDP83
+	bool "Samsung Leonid 384MB,64bit"
+	select MACH_LEONID_XXX
+endchoice
+
+endif # ARCH_SDP83
+
+
+
+config MACH_LEONID_XXX
+	default n
+	depends on MACH_LEONID
+	bool "Samsung Leonid board series"
+	select PCI
+	select SDP_PCI
+
+# Discontinous mem support
+if MACH_LEONID_XXX || MACH_AQUILA || MACH_CORONA
+
+choice
+	prompt "System memory"
+	default SDP_DISCONTIGMEM_SUPPORT
+
+config SDP_DISCONTIGMEM_SUPPORT
+        bool "Discontinous memory support"
+        select ARCH_DISCONTIGMEM_ENABLE
+
+config SDP_SINGLE_DDR_A
+	bool "Use DDR A channel only"
+
+config SDP_SINGLE_DDR_B
+	bool "Use DDR B channel only"
+
+endchoice
+
+endif	# MACH_LEONID_XXX || MACH_AQUILA
+
+
+# SDP92 AQUILA memory map
+if MACH_AQUILA
+choice
+	prompt "SDP92 Aquila memory map type"
+	default AQUILA_MEMORY_MAP_266
+
+config AQUILA_MEMORY_MAP_266
+	bool "Total 266MB (142/124)"
+	
+config AQUILA_MEMORY_MAP_SDECODE
+	bool "Total 300MB for 'single decoding scenario'(190/110)"
+
+endchoice	
+endif	# MACH_AQUILA
+
+# SDP93 CORONA memory map
+if MACH_CORONA
+choice
+	prompt "SDP93 Corona memory map type"
+	default CORONA_MEMMAP_40_130
+	
+config CORONA_MEMMAP_40_20
+	bool "Total 60MB (40/20)"
+	select SDP_DISCONTIGMEM_SUPPORT
+
+config CORONA_MEMMAP_40_30
+	bool "Total 70MB (40/30)"
+	select SDP_DISCONTIGMEM_SUPPORT
+
+config CORONA_MEMMAP_40_130
+	bool "Total 170MB (40/130)"
+	select SDP_DISCONTIGMEM_SUPPORT
+
+config CORONA_MEMMAP_90_80
+	bool "Total 170MB (90/80)"
+	select SDP_DISCONTIGMEM_SUPPORT
+
+config CORONA_MEMMAP_50_50
+	bool "Total 100MB (50/50)"
+	select SDP_DISCONTIGMEM_SUPPORT
+
+config CORONA_MEMMAP_56_66
+	bool "Total 122MB (56/66)"
+	select SDP_DISCONTIGMEM_SUPPORT
+
+config CORONA_MEMMAP_50_300
+	bool "Total 350MB(50/300)"
+	select SDP_DISCONTIGMEM_SUPPORT
+
+endchoice	
+endif	# MACH_CORONA
+
+if MACH_CORONA
+choice
+	prompt "Flash Type 1GB(BD)/128MB(TV+BD)"
+	default FLASH_FLEX_1GB
+
+config FLASH_FLEX_1GB
+	bool "FlexOneNAND 1GB"
+
+config FLASH_ONENAND_128MB
+	bool "OneNAND 128MB"
+
+endchoice
+endif	# MACH_CORONA
+
+config MIPS_BCM_NDVD
+	depends on ARCH_SDP93
+	bool "Broadcom 7601 UDF patch"
+
+endmenu
+
+endif

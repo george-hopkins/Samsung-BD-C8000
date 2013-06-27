@@ -1,0 +1,156 @@
+#!/bin/bash 
+
+echo "Clean All"
+rm -rf Image_1GB*
+rm -rf Image_128MB*
+
+
+rm -rf vmlinux_1GB*
+rm -rf vmlinux_128MB*
+
+
+echo "Build BD Only"
+make clean
+echo "copy FSR Core/BML/ Objects"
+cp drivers/fsr/Core/BML/FSR_BML_BIFCommon.o_orig  drivers/fsr/Core/BML/FSR_BML_BIFCommon.o
+cp drivers/fsr/Core/BML/FSR_BML_ROInterface.o_orig  drivers/fsr/Core/BML/FSR_BML_ROInterface.o
+cp configs/SELP.4.3.2.x.barcelona.BD.rel.20100208.config .config
+make -j 4 Image
+make Image
+mv arch/arm/boot/Image ./Image_1GB
+mv vmlinux vmlinux_1GB
+make modules
+find . -name "*.ko" -exec mv {} ../modules/modules_1GB \;
+
+echo "Build BD Only --For Secure Debug--"
+#make clean
+echo "copy FSR Core/BML/ Objects"
+#cp drivers/fsr/Core/BML/FSR_BML_BIFCommon.o_orig  drivers/fsr/Core/BML/FSR_BML_BIFCommon.o
+#cp drivers/fsr/Core/BML/FSR_BML_ROInterface.o_orig  drivers/fsr/Core/BML/FSR_BML_ROInterface.o
+#cp configs/SELP.4.3.2.x.barcelona.BD.rel.20100122.secure_debug.config .config
+ cp configs/SELP.4.3.2.x.barcelona.BD.rel.20100208.secure_debug.config .config
+make -j 4 Image
+make Image
+mv arch/arm/boot/Image ./Image_1GB_Secure_Debug
+mv vmlinux vmlinux_1GB_Secure_Debug
+#make modules
+#find . -name "*.ko" -exec mv {} ../modules/modules_1GB \;
+
+echo "Build BD Only --For Secure Release--"
+#make clean
+echo "copy FSR Core/BML/ Objects"
+#cp drivers/fsr/Core/BML/FSR_BML_BIFCommon.o_orig  drivers/fsr/Core/BML/FSR_BML_BIFCommon.o
+#cp drivers/fsr/Core/BML/FSR_BML_ROInterface.o_orig  drivers/fsr/Core/BML/FSR_BML_ROInterface.o
+#cp  configs/SELP.4.3.2.x.barcelona.BD.rel.20100208.secure_release.config    .config
+ cp  configs/SELP.4.3.2.x.barcelona.BD.rel.20100304.secure_release.config    .config
+make -j 4 Image
+make Image
+mv arch/arm/boot/Image ./Image_1GB_Secure_Release
+mv vmlinux vmlinux_1GB_Secure_Release
+#make modules
+#find . -name "*.ko" -exec mv {} ../modules/modules_1GB \;
+
+
+
+echo "Build TV+BD"
+make clean
+echo "copy FSR Core/BML/ Objects"
+cp drivers/fsr/Core/BML/FSR_BML_BIFCommon.o_orig  drivers/fsr/Core/BML/FSR_BML_BIFCommon.o
+cp drivers/fsr/Core/BML/FSR_BML_ROInterface.o_orig  drivers/fsr/Core/BML/FSR_BML_ROInterface.o
+cp configs/SELP.4.3.2.x.barcelona.TVBD.rel.20100208.config .config
+make -j 4 Image
+make Image
+mv arch/arm/boot/Image ./Image_128MB
+mv vmlinux vmlinux_128MB
+make modules
+find . -name "*.ko" -exec mv {} ../modules/modules_128MB \;
+
+echo "Build TV+BD --For Secure Debug--"
+#make clean
+echo "copy FSR Core/BML/ Objects"
+#cp drivers/fsr/Core/BML/FSR_BML_BIFCommon.o_orig  drivers/fsr/Core/BML/FSR_BML_BIFCommon.o
+#cp drivers/fsr/Core/BML/FSR_BML_ROInterface.o_orig  drivers/fsr/Core/BML/FSR_BML_ROInterface.o
+#cp configs/SELP.4.3.2.x.barcelona.TVBD.rel.20100122.secure_debug.config .config
+ cp configs/SELP.4.3.2.x.barcelona.TVBD.rel.20100208.secure_debug.config .config
+make -j 4 Image
+make Image
+mv arch/arm/boot/Image ./Image_128MB_Secure_Debug
+mv vmlinux vmlinux_128MB_Secure_Debug
+#make modules
+#find . -name "*.ko" -exec mv {} ../modules/modules_128MB \;
+
+
+echo "Build TV+BD --For Secure Release--"
+#make clean
+echo "copy FSR Core/BML/ Objects"
+#cp drivers/fsr/Core/BML/FSR_BML_BIFCommon.o_orig  drivers/fsr/Core/BML/FSR_BML_BIFCommon.o
+#cp drivers/fsr/Core/BML/FSR_BML_ROInterface.o_orig  drivers/fsr/Core/BML/FSR_BML_ROInterface.o
+#cp  configs/SELP.4.3.2.x.barcelona.TVBD.rel.20100208.secure_release.config  .config
+ cp  configs/SELP.4.3.2.x.barcelona.TVBD.rel.20100304.secure_release.config  .config
+make -j 4 Image
+make Image
+mv arch/arm/boot/Image ./Image_128MB_Secure_Release
+mv vmlinux vmlinux_128MB_Secure_Release
+#make modules
+#find . -name "*.ko" -exec mv {} ../modules/modules_128MB \;
+
+
+
+
+echo "Build C8900 TV+BD"
+make clean
+echo "copy FSR Core/BML/ Objects"
+cp drivers/fsr/Core/BML/FSR_BML_BIFCommon.o_orig  drivers/fsr/Core/BML/FSR_BML_BIFCommon.o
+cp drivers/fsr/Core/BML/FSR_BML_ROInterface.o_orig  drivers/fsr/Core/BML/FSR_BML_ROInterface.o
+cp configs/SELP.4.3.2.x.barcelona.C8900.rel.20100406.config .config
+make -j 4 Image
+make Image
+mv arch/arm/boot/Image ./Image_128MB_C8900
+mv vmlinux vmlinux_128MB_C8900
+make modules
+find . -name "*.ko" -exec mv {} ../modules/modules_128MB_C8900 \;
+
+echo "Build C8900 TV+BD --For Secure Debug--"
+#make clean
+echo "copy FSR Core/BML/ Objects"
+#cp drivers/fsr/Core/BML/FSR_BML_BIFCommon.o_orig  drivers/fsr/Core/BML/FSR_BML_BIFCommon.o
+#cp drivers/fsr/Core/BML/FSR_BML_ROInterface.o_orig  drivers/fsr/Core/BML/FSR_BML_ROInterface.o
+#cp configs/SELP.4.3.2.x.barcelona.TVBD.rel.20100122.secure_debug.config .config
+ cp configs/SELP.4.3.2.x.barcelona.C8900.rel.20100406.secure_debug.config .config
+make -j 4 Image
+make Image
+mv arch/arm/boot/Image ./Image_128MB_C8900_Secure_Debug
+mv vmlinux vmlinux_128MB_C8900_Secure_Debug
+#make modules
+#find . -name "*.ko" -exec mv {} ../modules/modules_128MB \;
+
+
+echo "Build C8900 TV+BD --For Secure Release--"
+#make clean
+echo "copy FSR Core/BML/ Objects"
+#cp drivers/fsr/Core/BML/FSR_BML_BIFCommon.o_orig  drivers/fsr/Core/BML/FSR_BML_BIFCommon.o
+#cp drivers/fsr/Core/BML/FSR_BML_ROInterface.o_orig  drivers/fsr/Core/BML/FSR_BML_ROInterface.o
+#cp  configs/SELP.4.3.2.x.barcelona.TVBD.rel.20100208.secure_release.config  .config
+ cp  configs/SELP.4.3.2.x.barcelona.C8900.rel.20100406.secure_release.config  .config
+make -j 4 Image
+make Image
+mv arch/arm/boot/Image ./Image_128MB_C8900_Secure_Release
+mv vmlinux vmlinux_128MB_C8900_Secure_Release
+#make modules
+#find . -name "*.ko" -exec mv {} ../modules/modules_128MB \;
+
+
+
+
+#echo "Eval"
+#make clean
+#echo "copy FSR Core/BML/ Objects"
+#cp drivers/fsr/Core/BML/FSR_BML_BIFCommon.o_orig  drivers/fsr/Core/BML/FSR_BML_BIFCommon.o
+#cp drivers/fsr/Core/BML/FSR_BML_ROInterface.o_orig  drivers/fsr/Core/BML/FSR_BML_ROInterface.o
+#cp configs/SELP.4.3.2.x.barcelona.Eval.rel.20091125.config .config
+#make -j 4 Image
+#make Image
+#mv arch/arm/boot/Image ./Image_Eval
+#mv vmlinux vmlinux_Eval
+
+

@@ -1,0 +1,10 @@
+config R8101_VER1012
+	tristate "RealTek RTL-8101/8103 PCIE Fast Ethernet Driver Ver 1.012"
+	depends on NET_PCI && PCI && !R8169
+	select CRC32
+	select MII
+	select R8101_NAPI
+
+config R8101_NAPI
+	bool
+

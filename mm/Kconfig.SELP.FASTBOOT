@@ -1,0 +1,7 @@
+config INSMOD_FASTBOOT
+        default n
+        bool "reduce insmod time via kernel_read function"
+        help
+          This option reduce insmod time. But if you use Busybox v1.6 over, should
+          modfiy busybox module/insmod.c source.
+

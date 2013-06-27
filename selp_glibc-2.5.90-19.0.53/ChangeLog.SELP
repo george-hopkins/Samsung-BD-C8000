@@ -1,0 +1,15 @@
+2009-07-27  Lee,Hakbong <hakbong5.lee@samsung.com>
+      
+       * Added SELP.4.3.1.x Add patch No.25
+       * pthread_cancel() abort() & syscall warning msg patch 
+
+
+2009-04-16  Lee,Hakbong <hakbong5.lee@samsung.com>
+      
+       * Key to change Thread Default Priority of system on SELP.
+       * It's only support ARM/MIPS/i386 Architecture.
+         -./nptl/sysdeps/<arch>/pthreaddef.h --> THREAD_DEFAULT_PRIORITY
+       * Default Stack Size is 2M per each thread for Embedded Linux of Samsung products.
+
+       * ./nptl/pthread_setschedparam.c: priority change between threads.
+          Non-preemptive priority-based scheduling (Policy: SCHED_OTHER)

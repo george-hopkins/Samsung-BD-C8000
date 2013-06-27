@@ -1,0 +1,205 @@
+
+## for VALENCIA
+CROSS_COMPILE = arm_v7_vfp_le-
+
+CC	= $(CROSS_COMPILE)gcc
+CXX	= $(CROSS_COMPILE)g++
+LD	= $(CROSS_COMPILE)ld
+AR	= $(CROSS_COMPILE)ar
+OBJCOPY	= $(CROSS_COMPILE)objcopy
+STRIP	= $(CROSS_COMPILE)strip
+RANLIB	= $(CROSS_COMPILE)ranlib
+
+SRC_DIR	= $(OPENSOURCE_DIR)/OP_Product/Engine/SDL/SDL-1.2.11
+OBJ_DIR	= $(SRC_DIR)
+LIB_DIR	= $(SRC_DIR)/Lib/VALENCIA
+
+ifeq ($(USE_AP_PUBLIC),y)
+GPLAYER_DIR = $(AP_DIR)/AP_Comp_Pub/AP_GPlayer
+else
+GPLAYER_DIR = $(AP_DIR)/AP_GPlayer
+endif
+
+#using SWF Malloc
+#export SWF_ENGINE_DIR	= $(LEEUM_DIR)/LM_AppMM/MM_TLIB/Engine
+
+INC =  -I$(GPLAYER_DIR)/Porting/Inc	\
+	-I$(SRC_DIR)				\
+	-I$(SRC_DIR)/include 			\
+	-I$(SRC_DIR)/src			\
+	-I$(SRC_DIR)/src/audio			\
+	-I$(SRC_DIR)/src/audio/dummy		\
+	-I$(SRC_DIR)/src/events			\
+	-I$(SRC_DIR)/src/joystick		\
+	-I$(SRC_DIR)/src/thread			\
+	-I$(SRC_DIR)/src/thread/generic		\
+	-I$(SRC_DIR)/src/thread/pthread		\
+	-I$(SRC_DIR)/src/timer			\
+	-I$(SRC_DIR)/src/timer			\
+	-I$(SRC_DIR)/src/video			\
+	-I$(SRC_DIR)/src/video/dummy		\
+	-I$(GPLAYER_DIR)/HWAccel/VALENCIA/Inc
+
+#	-I$(SWF_ENGINE_DIR)/Inc
+
+
+EXTRA_CFLAGS = -D_GNU_SOURCE=1 -pthread -D_REENTRANT -DHAVE_LINUX_VERSION_H -Wall -fPIC
+EXTRA_LDFLAGS =  -lm -ldl -lpthread 
+
+
+# for CHELSEA Option
+DEFINE += -D_CHELSEA # for YahooTV  -DUSE_BLOCK_MALLOC
+
+# Yahoo HW Acceleration Function
+DEFINE += -DYAHOO_HW_ACCELERATION
+# 
+
+## for debug
+# CFLAGS = -c -g $(INC) $(EXTRA_CFLAGS) $(DEFINE)
+
+## for release
+CFLAGS = -c -O2 $(INC) $(EXTRA_CFLAGS) $(DEFINE)
+
+
+OBJS = 								\
+		$(OBJ_DIR)/src/SDL.o 				\
+		$(OBJ_DIR)/src/SDL_error.o 			\
+		$(OBJ_DIR)/src/SDL_fatal.o			\
+		$(OBJ_DIR)/src/audio/SDL_audio.o 		\
+		$(OBJ_DIR)/src/audio/SDL_audiocvt.o 		\
+		$(OBJ_DIR)/src/audio/SDL_audiodev.o 		\
+		$(OBJ_DIR)/src/audio/SDL_mixer.o 		\
+		$(OBJ_DIR)/src/audio/SDL_mixer_MMX.o 		\
+		$(OBJ_DIR)/src/audio/SDL_mixer_MMX_VC.o		\
+		$(OBJ_DIR)/src/audio/SDL_mixer_m68k.o 		\
+		$(OBJ_DIR)/src/audio/SDL_wave.o 		\
+		$(OBJ_DIR)/src/audio/dummy/SDL_dummyaudio.o 	\
+		$(OBJ_DIR)/src/cpuinfo/SDL_cpuinfo.o 		\
+		$(OBJ_DIR)/src/events/SDL_active.o 		\
+		$(OBJ_DIR)/src/events/SDL_events.o 		\
+		$(OBJ_DIR)/src/events/SDL_expose.o 		\
+		$(OBJ_DIR)/src/events/SDL_keyboard.o 		\
+		$(OBJ_DIR)/src/events/SDL_mouse.o 		\
+		$(OBJ_DIR)/src/events/SDL_quit.o 		\
+		$(OBJ_DIR)/src/events/SDL_resize.o 		\
+		$(OBJ_DIR)/src/file/SDL_rwops.o 		\
+		$(OBJ_DIR)/src/joystick/SDL_joystick.o 		\
+		$(OBJ_DIR)/src/joystick/dummy/SDL_sysjoystick.o \
+		$(OBJ_DIR)/src/loadso/dlopen/SDL_sysloadso.o 	\
+		$(OBJ_DIR)/src/stdlib/SDL_getenv.o 		\
+		$(OBJ_DIR)/src/stdlib/SDL_iconv.o 		\
+		$(OBJ_DIR)/src/stdlib/SDL_malloc.o		\
+		$(OBJ_DIR)/src/stdlib/SDL_malloc2.o		\
+		$(OBJ_DIR)/src/stdlib/SDL_qsort.o		\
+		$(OBJ_DIR)/src/stdlib/SDL_stdlib.o 		\
+		$(OBJ_DIR)/src/stdlib/SDL_string.o 		\
+		$(OBJ_DIR)/src/thread/SDL_thread.o 		\
+		$(OBJ_DIR)/src/thread/pthread/SDL_syscond.o 	\
+		$(OBJ_DIR)/src/thread/pthread/SDL_sysmutex.o 	\
+		$(OBJ_DIR)/src/thread/pthread/SDL_syssem.o 	\
+		$(OBJ_DIR)/src/thread/pthread/SDL_systhread.o 	\
+		$(OBJ_DIR)/src/timer/SDL_timer.o		\
+		$(OBJ_DIR)/src/timer/unix/SDL_systimer.o 	\
+		$(OBJ_DIR)/src/video/SDL_blit.o 		\
+		$(OBJ_DIR)/src/video/SDL_blit_0.o 		\
+		$(OBJ_DIR)/src/video/SDL_blit_1.o 		\
+		$(OBJ_DIR)/src/video/SDL_blit_A.o 		\
+		$(OBJ_DIR)/src/video/SDL_blit_N.o 		\
+		$(OBJ_DIR)/src/video/SDL_bmp.o 			\
+		$(OBJ_DIR)/src/video/SDL_cursor.o 		\
+		$(OBJ_DIR)/src/video/SDL_gamma.o 		\
+		$(OBJ_DIR)/src/video/SDL_pixels.o 		\
+		$(OBJ_DIR)/src/video/SDL_RLEaccel.o 		\
+		$(OBJ_DIR)/src/video/SDL_stretch.o 		\
+		$(OBJ_DIR)/src/video/SDL_surface.o 		\
+		$(OBJ_DIR)/src/video/SDL_video.o		\
+		$(OBJ_DIR)/src/video/SDL_yuv.o 			\
+		$(OBJ_DIR)/src/video/SDL_yuv_mmx.o 		\
+		$(OBJ_DIR)/src/video/SDL_yuv_sw.o 		\
+		$(OBJ_DIR)/src/video/dummy/SDL_nullevents.o 	\
+		$(OBJ_DIR)/src/video/dummy/SDL_nullmouse.o 	\
+		$(OBJ_DIR)/src/video/dummy/SDL_nullvideo.o
+
+
+
+SRCS =								\
+		$(SRC_DIR)/src/SDL.c 				\
+		$(SRC_DIR)/src/SDL_error.c 			\
+		$(SRC_DIR)/src/SDL_fatal.c			\
+		$(SRC_DIR)/src/audio/SDL_audio.c 		\
+		$(SRC_DIR)/src/audio/SDL_audiocvt.c 		\
+		$(SRC_DIR)/src/audio/SDL_audiodev.c 		\
+		$(SRC_DIR)/src/audio/SDL_mixer.c 		\
+		$(SRC_DIR)/src/audio/SDL_mixer_MMX.c 		\
+		$(SRC_DIR)/src/audio/SDL_mixer_MMX_VC.c		\
+		$(SRC_DIR)/src/audio/SDL_mixer_m68k.c 		\
+		$(SRC_DIR)/src/audio/SDL_wave.c 		\
+		$(SRC_DIR)/src/audio/dummy/SDL_dummyaudio.c 	\
+		$(SRC_DIR)/src/cpuinfo/SDL_cpuinfo.c 		\
+		$(SRC_DIR)/src/events/SDL_active.c 		\
+		$(SRC_DIR)/src/events/SDL_events.c 		\
+		$(SRC_DIR)/src/events/SDL_expose.c 		\
+		$(SRC_DIR)/src/events/SDL_keyboard.c 		\
+		$(SRC_DIR)/src/events/SDL_mouse.c 		\
+		$(SRC_DIR)/src/events/SDL_quit.c 		\
+		$(SRC_DIR)/src/events/SDL_resize.c 		\
+		$(SRC_DIR)/src/file/SDL_rwops.c 		\
+		$(SRC_DIR)/src/joystick/SDL_joystick.c 		\
+		$(SRC_DIR)/src/joystick/dummy/SDL_sysjoystick.c \
+		$(SRC_DIR)/src/loadso/dlopen/SDL_sysloadso.c 	\
+		$(SRC_DIR)/src/stdlib/SDL_getenv.c 		\
+		$(SRC_DIR)/src/stdlib/SDL_iconv.c 		\
+		$(SRC_DIR)/src/stdlib/SDL_malloc.c		\
+		$(SRC_DIR)/src/stdlib/SDL_malloc2.c		\
+		$(SRC_DIR)/src/stdlib/SDL_qsort.c		\
+		$(SRC_DIR)/src/stdlib/SDL_stdlib.c 		\
+		$(SRC_DIR)/src/stdlib/SDL_string.c 		\
+		$(SRC_DIR)/src/thread/SDL_thread.c 		\
+		$(SRC_DIR)/src/thread/pthread/SDL_syscond.c 	\
+		$(SRC_DIR)/src/thread/pthread/SDL_sysmutex.c 	\
+		$(SRC_DIR)/src/thread/pthread/SDL_syssem.c 	\
+		$(SRC_DIR)/src/thread/pthread/SDL_systhread.c 	\
+		$(SRC_DIR)/src/timer/SDL_timer.c		\
+		$(SRC_DIR)/src/timer/unix/SDL_systimer.c 	\
+		$(SRC_DIR)/src/video/SDL_blit.c 		\
+		$(SRC_DIR)/src/video/SDL_blit_0.c 		\
+		$(SRC_DIR)/src/video/SDL_blit_1.c 		\
+		$(SRC_DIR)/src/video/SDL_blit_A.c 		\
+		$(SRC_DIR)/src/video/SDL_blit_N.c 		\
+		$(SRC_DIR)/src/video/SDL_bmp.c 			\
+		$(SRC_DIR)/src/video/SDL_cursor.c 		\
+		$(SRC_DIR)/src/video/SDL_gamma.c 		\
+		$(SRC_DIR)/src/video/SDL_pixels.c 		\
+		$(SRC_DIR)/src/video/SDL_RLEaccel.c 		\
+		$(SRC_DIR)/src/video/SDL_stretch.c 		\
+		$(SRC_DIR)/src/video/SDL_surface.c 		\
+		$(SRC_DIR)/src/video/SDL_video.c		\
+		$(SRC_DIR)/src/video/SDL_yuv.c 			\
+		$(SRC_DIR)/src/video/SDL_yuv_mmx.c 		\
+		$(SRC_DIR)/src/video/SDL_yuv_sw.c 		\
+		$(SRC_DIR)/src/video/dummy/SDL_nullevents.c 	\
+		$(SRC_DIR)/src/video/dummy/SDL_nullmouse.c 	\
+		$(SRC_DIR)/src/video/dummy/SDL_nullvideo.c
+		
+		
+TARGETNAME = libSDL.so
+
+$(TARGETNAME) : $(OBJS)
+	$(CC) -fPIC -shared -Wl,-soname,$@ -o $@ $(OBJS) $(EXTRA_CFLAGS) $(EXTRA_LDFLAGS)
+	chmod 777 $(TARGETNAME)
+	mv -f $(TARGETNAME) $(LIB_DIR)/
+	
+
+all :	$(TARGETNAME)
+
+dep :
+	gccmakedep $(INC) $(SRCS)
+
+clean :
+	rm -rf $(OBJS) $(TARGETNAME)
+	rm -rf $(LIB_DIR)/$(TARGETNAME)
+
+
+
+
+.SUFFIXES = .c .o 

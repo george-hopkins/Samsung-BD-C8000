@@ -1,0 +1,63 @@
+menu "Kernel hacking"
+
+source "lib/Kconfig.debug"
+
+config XMON
+	bool "Include xmon kernel debugger"
+	depends on DEBUG_KERNEL && !KGDB
+	help
+	  Include in-kernel hooks for the xmon kernel monitor/debugger.
+	  Unless you are intending to debug the kernel, say N here.
+
+config BDI_SWITCH
+	bool "Include BDI-2000 user context switcher"
+	depends on DEBUG_KERNEL
+	help
+	  Include in-kernel support for the Abatron BDI2000 debugger.
+	  Unless you are intending to debug the kernel with one of these
+	  machines, say N here.
+
+config SERIAL_TEXT_DEBUG
+	bool "Support for early boot texts over serial port"
+	depends on 4xx || LOPEC || MV64X60 || PPLUS || PRPMC800 || \
+		PPC_GEN550 || PPC_MPC52xx
+
+config PPC_OCP
+	bool
+	depends on IBM_OCP
+	default y
+
+config KFT
+	bool "Kernel Function Trace"
+	help
+	  Say Y here to turn on kernel function tracing. 
+	  This allows you to get a trace of kernel functions
+	  during kernel execution.  This can be helpful for
+	  debugging, but adds overhead to every kernel function
+	  invocation.  The overhead is small, but still present,
+	  even when tracing is not active.
+
+	  See the file Documentation/kft.txt for more information.
+          Say N here if you are unsure.
+
+config KFT_STATIC_RUN
+	bool "Static function tracing configuration"
+	depends on KFT
+	help
+	  Say Y here to compile the KFT configuration statically
+	  into the kernel.  This is needed if you plan to use KFT
+	  to get information about function timings on kernel bootup
+	  (prior to the kernel starting user space).  To do this, you
+	  need to create a valid kernel/kftstatic.conf file.
+
+config KFT_SAVE_ARGS
+	bool "Save function arguments in the trace log"
+	depends on KFT
+	default n 
+	help
+	  Say Y here to have KFT save the first few arguments to
+	  the function, in the trace log entry for that function.
+	  This will approximately double the size of the trace
+	  log buffer.
+
+endmenu
